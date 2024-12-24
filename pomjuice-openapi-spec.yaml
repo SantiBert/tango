@@ -1,0 +1,1326 @@
+openapi: 3.0.0
+info:
+  title: PomJuice
+  description: PomJuice API
+  version: 1.0.0
+paths:
+  /auth/generate-code/:
+    post:
+      summary: Generate a phone number verification code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phoneNumber:
+                  type: string
+      responses:
+        '200':
+          description: Verification code sent
+        '400':
+          description: Wrong phone number
+  /auth/validate-code/:
+    post:
+      summary: Validate a phone number verification code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                verificationCode:
+                  type: string
+      responses:
+        '200':
+            description: Ok
+        '401':
+            description: Unauthorized
+  /auth/signup/:
+    post:
+      summary: Create new account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: OK
+        '409':
+          description: Phone number already exists
+        '400':
+          description: Email already exists
+        '500':
+          description: Something went wrong, please try again later
+  /auth/login/:
+    post:
+      summary: Access the account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Successful login
+        '400':
+          description: Bad request, password or email in a wrong format
+        '500':
+          description: Something went wrong, please try again later
+  /auth/forgot-password/:
+    post:
+      summary: Recover the account in case you have lost the password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Email recovery password sent
+        '404':
+          description: Email not found
+        '500':
+          description: Something went wrong, please try again later
+  /auth/reset-password/:
+    post:
+      summary: Confirm the new password in case you have lost the account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newPassword:
+                  type: string
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: Bad request, new password or old password in a wrong format
+        '500':
+          description: Something went wrong, please try again later
+  /auth/change-password/:
+    post:
+      summary: Confirm the new password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                oldPassword:
+                  type: string
+                newPassword:
+                  type: string
+      responses:
+        '200':
+          description: New Password Saved
+        '500':
+          description: Something went wrong, please try again later
+  /profile/:
+    post:
+      summary: Create the initial profile information
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Something went wrong, please try again later
+    get:
+      summary: Obtain the profile information of the registered user
+      responses:
+        '200':
+          description: User Data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  firstName:
+                    type: string
+                    example: Joe
+                  lastName:
+                    type: string
+                    example: Doe
+                  bio:
+                    type: string
+                    example: User Exmple Bio
+                  phoneNumber:
+                    type: string
+                    example: 1111111011
+                  linkedinUrl:
+                    type: string
+                    example: https://www.linkedin.com/in/user-2a83691a3/
+                  xUrl:
+                    type: string
+                    example: https://twitter.com/ExampleUser
+                  websiteUrl:
+                    type: string
+                    example: https://www.example-user.com/
+                  calendlyUrl:
+                    type: string
+                    example: https://www.example-user.com/
+                  imageUrl:
+                    type: string
+                    example: https://www.example-user.com/image.jpg
+                  professionalHistory:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        description:
+                          type: json
+                        startDate:
+                          type: datetime
+                          example: 2022-03-13T18:00:00Z
+                        endDate:
+                          type: datetime
+                          example: 2024-03-13T18:00:00Z
+        '500':
+          description: Something went wrong, please try again later
+
+  /profile/change-last-name/:
+    put:
+      summary: Change the last name of a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                last-name:
+                  type: string
+      responses:
+        '200':
+          description: Ok
+        '500':
+          description: Something went wrong, please try again later
+  /profile/change-first-name/:
+    put:
+      summary: Change the first name of a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+      responses:
+        '200':
+          description: Ok
+        '500':
+          description: Something went wrong, please try again later
+  /profile/change-profile-image/:
+    post:
+      summary: Create the profile image of a user
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                profileImage:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Ok
+        '500':
+          description: Something went wrong, please try again later
+    put:
+      summary: Change the profile image of a user
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                profileImage:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Ok
+        '500':
+          description: Something went wrong, please try again later
+  /profile/change-company/:
+    post:
+      summary: Create the company of a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                company:
+                  type: string
+      responses:
+        '200':
+          description: Ok
+        '500':
+          description: Something went wrong, please try again later
+    put:
+      summary: Change the company of a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                company:
+                  type: string
+      responses:
+        '200':
+          description: Ok
+        '500':
+          description: Something went wrong, please try again later
+  /profile/change-bio/:
+    get:
+      summary: Change the bio of a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bio:
+                  type: object
+      responses:
+        '200':
+          description: Ok
+        '500':
+          description: Something went wrong, please try again later
+    put:
+      summary: Change the bio of a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bio:
+                  type: object
+      responses:
+        '200':
+          description: Ok
+        '500':
+          description: Something went wrong, please try again later
+  /profile/update-social-urls/:
+    post:
+      summary: Change the relevant links of a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                linkedinUrl:
+                  type: string
+                xUrl:
+                  type: string
+                websiteUrl:
+                  type: string
+                calendlyUrl:
+                  type: string
+      responses:
+        '200':
+          description: Ok
+        '500':
+          description: Something went wrong, please try again later
+    put:
+      summary: Change the relevant links of a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                linkedinUrl:
+                  type: string
+                xUrl:
+                  type: string
+                websiteUrl:
+                  type: string
+                calendlyUrl:
+                  type: string
+      responses:
+        '200':
+          description: Ok
+        '500':
+          description: Something went wrong, please try again later
+  /profile/professional-history/:
+    get:
+      summary: Get all professional history of a user
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  description:
+                    type: json
+                  startDate:
+                    type: datetime
+                    example: 2022-03-13T18:00:00Z
+                  endDate:
+                    type: datetime
+                    example: 2024-03-13T18:00:00Z
+      responses:
+        '200':
+          description: Professional History User
+        '500':
+          description: Something went wrong, please try again later
+    post:
+      summary: Create a professional history of the registered user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                company:
+                  type: string
+                startDate:
+                  type: string
+                  format: dateTime
+                endDate:
+                  type: string
+                  format: dateTime
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: Bad request, title, company, startDate, or endDate in a wrong format
+        '500':
+          description: Something went wrong, please try again later
+    
+  /startup/:
+    post:
+      summary: Create a startup with the registered user as the main founder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                location:
+                  type: string
+                industry:
+                  type: string
+                employeeCount:
+                  type: string
+                stage:
+                  type: string
+                websiteUrl:
+                  type: string
+      responses:
+        '200':
+          description: Startup Created - ID Startup
+        '400':
+          description: Bad request, name, description, location, industry, employeeCount, stage, or websiteUrl in a wrong format
+        '500':
+          description: Something went wrong, please try again later
+    get:
+      summary: Get all the main data of a Startup    
+      responses:
+        '200':
+          description: Startup Data
+          content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                location:
+                  type: string
+                industry:
+                  type: string
+                employeeCount:
+                  type: string
+                stage:
+                  type: string
+                websiteUrl:
+                  type: string
+                imageUrl:
+                  type: string
+                videoUrl:
+                  type: string
+                slidedeckUrl:
+                  type: string
+                isPitchDeckUrl:
+                  type: string
+                founders:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      firstName:
+                        type: string
+                      lastName:
+                        type: string
+                      imageProfileUrl:
+                        type: string
+                businessTraction:
+                  type: object
+                  properties:
+                    businessModel:
+                      type: string
+                    businessRevenueSources:
+                      type: string
+                    mrr:
+                      type: integer
+                    topCustomers:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          imageUrl:
+                            type: string
+                invesment:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      roundType:
+                        type: string
+                      amount:
+                        type: integer
+                      raisedAmount:
+                        type: integer
+                      date:
+                        type: datetime
+                      investors:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+        '500':
+          description: Something went wrong, please try again later
+
+  /startup/{startupId}/edit/:
+    put:
+      summary: Edit specific startup data by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                location:
+                  type: string
+                industry:
+                  type: string
+                employeeCount:
+                  type: string
+                stage:
+                  type: string
+                websiteUrl:
+                  type: string
+      responses:
+        '200':
+          description: Startup Created - ID Startup
+        '400':
+          description: Bad request, name, description, location, industry, employeeCount, stage, or websiteUrl in a wrong format
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Something went wrong, please try again later
+  /startup/{startupId}/change-image/:
+    put:
+      summary: Change the image of specific startup data by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Ok
+        '500':
+          description: Something went wrong, please try again later
+  /startup/{startupId}/change-name/:
+    put:
+      summary: Change the name of specific startup data by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: Ok
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Something went wrong, please try again later
+  /startup/{startupId}/change-location/:
+    put:
+      summary: Change the location of specific startup data by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                location:
+                  type: string
+      responses:
+        '200':
+          description: Ok
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Something went wrong, please try again later
+  /startup/{startupId}/change-industry/:
+    put:
+      summary: Change the industry of specific startup data by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                industry:
+                  type: string
+      responses:
+        '200':
+          description: Ok
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Something went wrong, please try again later
+  /startup/{startupId}/change-stage/:
+    put:
+      summary: Change the stage of specific startup data by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                stage:
+                  type: string
+      responses:
+        '200':
+          description: Ok
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Something went wrong, please try again later
+  /startup/{startupId}/change-website/:
+    put:
+      summary: Change the website of specific startup data by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                website:
+                  type: string
+      responses:
+        '200':
+          description: Ok
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Something went wrong, please try again later
+  /startup/{startupId}/change-video/:
+    post:
+      summary: Change the video of specific startup data by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                video:
+                  type: object
+      responses:
+        '200':
+          description: Ok
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Something went wrong, please try again later
+    get:
+     summary: Get the video of specific startup data by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Startup Video Url
+          content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                  ulr:
+                   type: string
+        '400':
+          description: Bad request
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Some internal server error
+
+  /startup/{startupId}/description/:
+    put:
+      summary: Change the description of specific startup data by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: object
+      responses:
+        '200':
+          description: Ok
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Something went wrong, please try again later
+  /startup/{startupId}/pitch-deck/:
+    get:
+      summary: Get the pitch deck of specific startup data by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Startup Investment Data
+          content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  url:
+                    type: string
+        '400':
+          description: Bad request
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Some internal server error
+    post:
+      summary: Change the pitch deck of specific startup data by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pitchDeck:
+                  type: object
+      responses:
+        '200':
+          description: Startup Pitch Deck Saved
+        '400':
+          description: Bad request, pitch deck in a wrong format
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Something went wrong, please try again later
+    
+  /startup/{startupId}/founder/:
+    get:
+      summary: Get a list of founders of specific startup data by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Founders Data of the startUp
+          content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      firstName:
+                        type: string
+                      lastName:
+                        type: string
+                      imageProfileUrl:
+                        type: string
+         '400':
+            description: Bad request
+          '404':
+            description: Startup does not exist
+          '500':
+            description: Some internal server error
+    post:
+      summary: Add a founder to specific startup data by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                role:
+                  type: string
+      responses:
+        '200':
+          description: Startup Founder Added
+        '400':
+          description: Bad request
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Something went wrong, please try again later
+  /startup/{startupId}/business-traction/:
+    get:
+      summary: Get the business traction data of specific startup data by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Startup Business Traction Data
+          content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                businessTraction:
+                  type: object
+                  properties:
+                    businessModel:
+                      type: string
+                    businessRevenueSources:
+                      type: string
+                    mrr:
+                      type: integer
+                    topCustomers:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          imageUrl:
+                            type: string
+        '400':
+          description: Bad request, business traction in a wrong format
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Something went wrong, please try again later
+    post:
+      summary: Create the business traction of specific startup data by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                businessModel:
+                  type: string
+                businessRevenueSources:
+                  type: string
+                mrr:
+                  type: integer
+                topCustomers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        imageUrl:
+                          type: string
+      responses:
+        '200':
+          description: Startup Business Traction Created
+        '400':
+          description: Bad request
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Something went wrong, please try again later   
+    put:
+      summary: Change the business traction of specific startup data by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                businessTraction:
+                  type: object
+                  properties:
+                    businessModel:
+                      type: string
+                    businessRevenueSources:
+                      type: string
+                    mrr:
+                      type: integer
+                    topCustomers:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          imageUrl:
+                            type: string
+      responses:
+        '200':
+          description: Startup Business Traction Changed
+        '400':
+          description: Bad request
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Something went wrong, please try again later
+  
+  /startup/{startupId}/invesment/:
+    get:
+      summary: Get the invesment data of specific startup data by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Startup Business Traction Data
+          content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  roundType:
+                    type: string
+                  amount:
+                    type: integer
+                  raisedAmount:
+                    type: integer
+                  date:
+                    type: datetime
+                  investors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+        '400':
+          description: Bad request
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Some internal server error
+    post:
+      summary: Create invesmentor traction of specific startup data by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                roundType:
+                  type: string
+                amount:
+                  type: integer
+                raisedAmount:
+                  type: integer
+                date:
+                  type: datetime
+                investors:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      firstName:
+                        type: string
+                      lastName:
+                        type: string
+                      email:
+                        type: string
+                      firmName:
+                        type: string
+                      investorType:
+                        type: string
+                  
+      responses:
+        '200':
+          description: Startup Business Traction Created
+        '400':
+          description: Bad request
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Something went wrong, please try again later           
+
+  /reviews/{startupId}:
+    get:
+      summary:  Endpoint to get a reviews for a specific startup by ID
+      parameters:
+        - name: startupId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Review list
+          content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  overalRating:
+                  type: integer
+                teamValue:
+                  type: integer
+                problemValue:
+                  type: integer
+                solutionValue:
+                  type: integer
+                gtmstrategyValue:
+                  type: integer
+                marketoppValue:
+                  type: integer
+                details:
+                  type: string
+                isAnonymous:
+                  type: boolean
+        '400':
+          description: Bad request
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Some internal server error          
+    post:
+      summary: Endpoint to create a review for a specific startup by ID
+      parameters:
+        - in: path
+          name: startupId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                overalRating:
+                  type: integer
+                teamValue:
+                  type: integer
+                problemValue:
+                  type: integer
+                solutionValue:
+                  type: integer
+                gtmstrategyValue:
+                  type: integer
+                marketoppValue:
+                  type: integer
+                details:
+                  type: string
+                isAnonymous:
+                  type: boolean
+      responses:
+        '200':
+          description: Reviews Investment Created
+        '400':
+          description: Bad request
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Some internal server error
+
+  /startup/{startupId}/share-story:
+    get:
+      summary: Endpoint to get all register of shared stories of a specific startup by ID
+      parameters:
+        - in: path
+          name: startupId
+          required: true
+          schema:
+            type: string     
+      responses:
+        '200':
+          description: Shared Story all data
+          content:
+          application/json:
+            schema:
+              type: array
+            items:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                relationship:
+                  type: string
+                url:
+                  type: string
+        '400':
+          description: Bad request
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Some internal server error
+    post:
+      summary: Endpoint to create a shared story for a specific startup by ID
+      parameters:
+        - in: path
+          name: startupId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                relationship:
+                  type: string
+                url:
+                  type: string
+      responses:
+        '200':
+          description: Shared Story Created
+        '400':
+          description: Bad request
+        '404':
+          description: Startup does not exist
+        '500':
+          description: Some internal server error
+  /profile/change-tagline/:
+      put:
+        summary: Change the tagline of a user
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  last-name:
+                    type: string
+        responses:
+          '200':
+            description: Ok
+          '500':
+            description: Something went wrong, please try again later
